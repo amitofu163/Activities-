@@ -1,451 +1,344 @@
-已為你更新並生成最新的 index.html 網頁檔案！在這個版本中加入了**「自訂活動標題」**功能。
-### ✨ 新增的「自訂標題」功能特色
- 1. **✏️ 標題旁新增編輯按鈕**：
-   * 點擊標題旁邊的 **✏️ 鉛筆按鈕**，就會跳出輸入框讓你輸入這次活動的新名稱（例如：2026墾丁露營大會 或 宜蘭烤肉趴：選總召）。
- 2. **🔄 即時連線同步標題**：
-   * 當你修改標題後，**所有已經連線進來的朋友手機畫面上，標題會同步更新**。
- 3. **🔗 網址自動帶入標題**：
-   * 點擊「複製邀請連結」發給朋友時，網址會自動包含你設定的新標題，朋友點進去就會直接看到新的活動名稱！
-### 📲 完整 HTML 程式碼（可直接複製或下載檔案）：
-```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>⛺ 露營大會：選總召與會計！ 🌲</title>
-  <!-- 載入 PeerJS 免費即時連線庫 -->
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-  <!-- 載入 QR Code 生成庫 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght@500;700&display=swap');
+  <title>露營大會：選總召與會計！</title>
 
-    * { box-sizing: border-box; touch-action: manipulation; }
+  <!-- 引入 Google Fonts 胖胖字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- 引入 PeerJS 套件 -->
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+  <style>
+    /* 全頁面統一胖胖粗體 */
+    * {
+      box-sizing: border-box;
+      font-family: 'Zen Maru Gothic', 'Mochiy Pop One', cursive, sans-serif;
+      font-weight: 900;
+      user-select: none;
+    }
 
     body {
-      background-color: #f4eae1;
-      background-image: radial-gradient(#d3c1b0 15%, transparent 16%);
-      background-size: 20px 20px;
-      font-family: 'Noto Sans TC', sans-serif;
-      color: #4a3b32;
-      text-align: center;
       margin: 0;
       padding: 15px;
-    }
-
-    /* 標題與設定區 */
-    .title-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    h1 {
-      font-family: 'Fredoka One', cursive, 'Noto Sans TC';
-      color: #2e5a44;
-      font-size: 1.8rem;
-      margin: 0;
-      text-shadow: 2px 2px 0px #fff;
-    }
-
-    .edit-title-btn {
-      background: #8b5e3c;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-
-    /* 連線面板 */
-    .status-card {
-      background: #ffffffeb;
-      border: 3px dashed #8b5e3c;
-      border-radius: 18px;
-      padding: 12px;
-      margin: 0 auto 15px auto;
-      max-width: 400px;
-      box-shadow: 0 6px 0 #d3c1b0;
-    }
-
-    .online-badge {
-      background: #6b8e23;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 0.95rem;
-      display: inline-block;
-      margin-bottom: 5px;
-    }
-
-    .share-btn {
-      background: #4a7c59;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-
-    #qrcode {
-      display: flex;
-      justify-content: center;
-      margin: 10px 0;
-    }
-
-    /* 轉盤主區域 */
-    .game-container {
+      background-color: #FAF8F5;
+      color: #333333;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      max-width: 500px;
-      margin: 0 auto;
+      min-height: 100vh;
     }
 
-    @media (min-width: 768px) {
-      .game-container {
-        flex-direction: row;
-        max-width: 900px;
-        justify-content: center;
-      }
+    h1 {
+      font-size: 1.8rem;
+      color: #4A4A4A;
+      text-shadow: 2px 2px 0px #FFF, 3px 3px 0px rgba(0,0,0,0.08);
+      margin: 10px 0 15px 0;
+      text-align: center;
     }
 
-    .wheel-card {
-      background: #fff8f0;
-      border: 4px solid #5c4033;
-      border-radius: 25px;
+    .card {
+      background: white;
       padding: 15px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
       width: 100%;
-      max-width: 320px;
-      box-shadow: 0 8px 0 #5c4033;
-      position: relative;
+      max-width: 400px;
+      margin-bottom: 15px;
+      text-align: center;
     }
 
-    .wheel-card h2 {
-      margin: 5px 0 10px 0;
-      color: #8b4513;
-      font-size: 1.3rem;
-    }
-
-    .canvas-wrapper {
-      position: relative;
-      width: 240px;
-      height: 240px;
-      margin: 0 auto 10px auto;
-    }
-
-    /* 露營風格營釘指針 */
-    .pointer {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      border-top: 24px solid #d9534f;
-      z-index: 10;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-    }
-
-    canvas {
-      border-radius: 50%;
-      transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .spin-btn {
-      background: #e67e22;
-      color: white;
-      border: 3px solid #b15b10;
-      border-radius: 50px;
-      padding: 10px 30px;
+    .btn {
+      background-color: #FFB3BA;
+      color: #333;
+      border: none;
+      padding: 12px 24px;
       font-size: 1.1rem;
-      font-weight: bold;
+      border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 0 #b15b10;
-      width: 80%;
-      margin-top: 5px;
+      box-shadow: 0 4px 0px #E598A0;
+      transition: all 0.1s ease;
+      margin: 5px;
     }
 
-    .spin-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #b15b10;
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0px 0px #E598A0;
     }
 
-    .spin-btn:disabled {
-      background: #ccc;
-      border-color: #999;
+    .btn:disabled {
+      background-color: #E0E0E0;
+      color: #A0A0A0;
       box-shadow: none;
       cursor: not-allowed;
     }
 
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      border: 3px solid #FFB3BA;
+      border-radius: 12px;
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+    }
+
+    /* 轉盤容器 */
+    .wheel-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 10px auto;
+    }
+
+    /* 轉盤指標 */
+    .pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 30px solid #FF6B6B;
+      z-index: 10;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+    }
+
+    canvas {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    }
+
+    /* 結果顯示欄 */
     .result-box {
+      font-size: 1.3rem;
+      color: #555555;
+      min-height: 40px;
       margin-top: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #27ae60;
-      min-height: 28px;
+    }
+
+    .status-tag {
+      font-size: 0.9rem;
+      background: #F0F0F0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 10px;
+      color: #6C757D;
     }
   </style>
 </head>
 <body>
 
-  <div class="title-container">
-    <h1 id="main-title">⛺ 露營大會：選總召與會計！ 🌲</h1>
-    <button class="edit-title-btn" title="修改活動標題" onclick="changeTitle()">✏️</button>
+  <h1>⛺️ 露營大會：選總召與會計！</h1>
+
+  <!-- 房間設定區塊 -->
+  <div class="card">
+    <div id="status" class="status-tag">狀態：初始化中...</div>
+    <div id="room-controls">
+      <button class="btn" onclick="createRoom()">建立房間 (成為房主)</button>
+      <div style="margin-top: 10px;">
+        <input type="text" id="room-id-input" placeholder="輸入房間 ID">
+        <button class="btn" style="background-color: #BAE1FF; box-shadow: 0 4px 0px #97C4E6;" onclick="joinRoom()">加入</button>
+      </div>
+    </div>
   </div>
 
-  <div class="status-card">
-    <div class="online-badge">🟢 連線人數：<span id="conn-count">1</span> 人</div>
-    <div id="room-info" style="font-size: 0.85rem; color: #666; margin-top: 3px;">建立房間中...</div>
-    <button class="share-btn" onclick="copyShareLink()">📋 複製邀請連結給朋友</button>
-    <div id="qrcode"></div>
-  </div>
-
-  <div class="game-container">
-    <!-- 第一個轉盤：總召 -->
-    <div class="wheel-card">
-      <h2>👑 露營總召</h2>
-      <div class="canvas-wrapper">
-        <div class="pointer"></div>
-        <canvas id="wheel1" width="240" height="240"></canvas>
-      </div>
-      <button id="btn1" class="spin-btn" onclick="requestSpin(1)">抽總召！</button>
-      <div id="result1" class="result-box">等待開始...</div>
+  <!-- 轉盤區塊 -->
+  <div class="card">
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="320" height="320"></canvas>
     </div>
-
-    <!-- 第二個轉盤：會計 -->
-    <div class="wheel-card">
-      <h2>💰 財務會計</h2>
-      <div class="canvas-wrapper">
-        <div class="pointer"></div>
-        <canvas id="wheel2" width="240" height="240"></canvas>
-      </div>
-      <button id="btn2" class="spin-btn" onclick="requestSpin(2)" disabled>抽會計！</button>
-      <div id="result2" class="result-box">先選出總召才會解鎖</div>
-    </div>
+    
+    <button id="spin-btn" class="btn" style="font-size: 1.3rem; width: 80%; margin-top: 15px;" onclick="startSpin()" disabled>開始抽卡！</button>
+    <div id="result" class="result-box">等待開始...</div>
   </div>
 
   <script>
-    // 名單與顏色
-    const originalNames = ['鈴鈴', '文駿', '崔', '璟勝', '阿博', '豆腐'];
-    const colors = ['#A3B18A', '#588157', '#3A5A40', '#DAD7CD', '#E9C46A', '#F4A261'];
-
-    let currentNamesWheel2 = [...originalNames];
-    let leaderWinner = null;
+    const members = ["鈴鈴", "文駿", "崔", "璟勝", "阿博", "豆腐"];
+    
+    // 淺色系（馬卡龍/莫蘭迪淺色）：紅、橙、黃、綠、藍、紫
+    const colors = [
+      "#FFB3BA", // 淺紅 (馬卡龍粉)
+      "#FFDFBA", // 淺橙 (馬卡龍橘)
+      "#FFFFBA", // 淺黃 (奶油黃)
+      "#BAFFC9", // 淺綠 (薄荷綠)
+      "#BAE1FF", // 淺藍 (天空藍)
+      "#E8AEFF"  // 淺紫 (薰衣草紫)
+    ];
+    
     let peer = null;
     let connections = [];
+    let hostConn = null;
     let isHost = false;
-    let currentTitle = "⛺ 露營大會：選總召與會計！ 🌲";
 
-    // --- 連線與 PeerJS 處理 ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const hostId = urlParams.get('room');
-    const customTitleParam = urlParams.get('title');
+    // 轉盤繪製與動畫變數
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    let currentAngle = 0;
+    let isSpinning = false;
+    let targetMode = "總召"; // 先抽總召，再抽會計
+    let leaderName = "";
 
-    // 若網址帶有自訂標題，讀取並顯示
-    if (customTitleParam) {
-      currentTitle = decodeURIComponent(customTitleParam);
-      document.getElementById('main-title').innerText = currentTitle;
-      document.title = currentTitle;
+    function drawWheel(angle) {
+      const numSegments = members.length;
+      const arcSize = (2 * Math.PI) / numSegments;
+      ctx.clearRect(0, 0, 320, 320);
+
+      for (let i = 0; i < numSegments; i++) {
+        const startArc = angle + i * arcSize;
+        const endArc = startArc + arcSize;
+
+        // 畫扇形
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.moveTo(160, 160);
+        ctx.arc(160, 160, 150, startArc, endArc);
+        ctx.fill();
+
+        // 畫文字（黑字＋白框）
+        ctx.save();
+        ctx.translate(160 + Math.cos(startArc + arcSize / 2) * 100, 160 + Math.sin(startArc + arcSize / 2) * 100);
+        ctx.rotate(startArc + arcSize / 2 + Math.PI / 2);
+        ctx.font = "900 22px 'Zen Maru Gothic', cursive, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // 白框 (Stroke)
+        ctx.strokeStyle = "#FFFFFF";
+        ctx.lineWidth = 5;
+        ctx.lineJoin = "round";
+        ctx.strokeText(members[i], 0, 0);
+
+        // 黑字 (Fill)
+        ctx.fillStyle = "#222222";
+        ctx.fillText(members[i], 0, 0);
+
+        ctx.restore();
+      }
     }
 
-    if (hostId) {
-      // 子連線者 (Client)
-      peer = new Peer();
-      peer.on('open', () => {
-        document.getElementById('room-info').innerText = "已成功加入房間！";
-        const conn = peer.connect(hostId);
-        setupConnection(conn);
-      });
-    } else {
-      // 建立者 (Host)
+    drawWheel(currentAngle);
+
+    // PeerJS 邏輯
+    peer = new Peer();
+
+    peer.on('open', (id) => {
+      document.getElementById('status').innerText = `已連線！你的 ID: ${id}`;
+    });
+
+    function createRoom() {
       isHost = true;
-      const randomRoomId = "camping-" + Math.floor(1000 + Math.random() * 9000);
-      peer = new Peer(randomRoomId);
-      peer.on('open', (id) => {
-        document.getElementById('room-info').innerText = `房長建立成功！房號：${id}`;
-        generateQRCodeAndLink();
-      });
+      document.getElementById('status').innerText = `你是房主 | 房間 ID: ${peer.id}`;
+      document.getElementById('spin-btn').disabled = false;
+      document.getElementById('room-controls').style.display = 'none';
 
       peer.on('connection', (conn) => {
         connections.push(conn);
-        updateConnCount();
-        setupConnection(conn);
+        conn.on('data', (data) => handleData(data));
       });
     }
 
-    // 修改活動標題功能
-    function changeTitle() {
-      const newTitle = prompt("請輸入本次活動的新標題：", currentTitle);
-      if (newTitle && newTitle.trim() !== "") {
-        currentTitle = newTitle.trim();
-        document.getElementById('main-title').innerText = currentTitle;
-        document.title = currentTitle;
+    function joinRoom() {
+      const roomId = document.getElementById('room-id-input').value.trim();
+      if (!roomId) return alert("請輸入房間 ID");
 
-        // 廣播給所有已連線的朋友
-        broadcast({ type: 'TITLE_UPDATE', title: currentTitle });
+      isHost = false;
+      hostConn = peer.connect(roomId);
 
-        // 重新更新 QRCode 與分享網址
-        if (isHost) {
-          generateQRCodeAndLink();
-        }
-      }
-    }
-
-    function generateQRCodeAndLink() {
-      const shareUrl = buildShareUrl();
-      document.getElementById("qrcode").innerHTML = "";
-      new QRCode(document.getElementById("qrcode"), {
-        text: shareUrl,
-        width: 100,
-        height: 100
-      });
-    }
-
-    function buildShareUrl() {
-      let baseUrl = window.location.href.split('?')[0];
-      let id = isHost ? peer.id : hostId;
-      return `${baseUrl}?room=${id}&title=${encodeURIComponent(currentTitle)}`;
-    }
-
-    function setupConnection(conn) {
-      conn.on('open', () => {
-        updateConnCount();
-        if (isHost) {
-          conn.send({ type: 'TITLE_UPDATE', title: currentTitle });
-        }
+      hostConn.on('open', () => {
+        document.getElementById('status').innerText = `已成功加入房間！`;
+        document.getElementById('room-controls').style.display = 'none';
       });
 
-      conn.on('data', (data) => {
-        handleReceivedData(data);
-        if (isHost) {
-          connections.forEach(c => {
-            if (c.peer !== conn.peer && c.open) c.send(data);
-          });
-        }
-      });
-
-      conn.on('close', () => {
-        connections = connections.filter(c => c.peer !== conn.peer);
-        updateConnCount();
-      });
-    }
-
-    function updateConnCount() {
-      const count = (isHost ? connections.length : 0) + 1;
-      document.getElementById('conn-count').innerText = count;
+      hostConn.on('data', (data) => handleData(data));
     }
 
     function broadcast(data) {
+      connections.forEach(conn => conn.send(data));
+    }
+
+    function startSpin() {
+      if (isSpinning) return;
+      
+      const targetIndex = Math.floor(Math.random() * members.length);
+      const data = { type: 'SPIN', targetIndex: targetIndex, mode: targetMode };
+      
       if (isHost) {
-        connections.forEach(c => { if(c.open) c.send(data); });
-        handleReceivedData(data);
-      } else {
-        const conn = Object.values(peer.connections)[0][0];
-        if (conn && conn.open) conn.send(data);
+        broadcast(data);
+        runSpinAnimation(targetIndex, targetMode);
       }
     }
 
-    function copyShareLink() {
-      const shareUrl = buildShareUrl();
-      navigator.clipboard.writeText(shareUrl);
-      alert("已複製連線網址與新標題，傳給朋友開啟即可連線！");
-    }
-
-    // --- 繪製轉盤邏輯 ---
-    function drawWheel(canvasId, items) {
-      const canvas = document.getElementById(canvasId);
-      const ctx = canvas.getContext('2d');
-      const num = items.length;
-      const arc = (2 * Math.PI) / num;
-      const radius = canvas.width / 2;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      items.forEach((name, i) => {
-        const angle = i * arc;
-        ctx.beginPath();
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.moveTo(radius, radius);
-        ctx.arc(radius, radius, radius, angle, angle + arc);
-        ctx.fill();
-
-        ctx.save();
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 15px 'Noto Sans TC'";
-        ctx.translate(radius, radius);
-        ctx.rotate(angle + arc / 2);
-        ctx.textAlign = "right";
-        ctx.fillText(name, radius - 15, 5);
-        ctx.restore();
-      });
-    }
-
-    // --- 旋轉控制與數據發送 ---
-    function requestSpin(wheelNum) {
-      const randomDeg = Math.floor(Math.random() * 360) + 2160;
-      broadcast({ type: 'SPIN', wheelNum: wheelNum, targetDeg: randomDeg });
-    }
-
-    function handleReceivedData(data) {
+    function handleData(data) {
       if (data.type === 'SPIN') {
-        runSpin(data.wheelNum, data.targetDeg);
-      } else if (data.type === 'TITLE_UPDATE') {
-        currentTitle = data.title;
-        document.getElementById('main-title').innerText = currentTitle;
-        document.title = currentTitle;
+        runSpinAnimation(data.targetIndex, data.mode);
       }
     }
 
-    function runSpin(wheelNum, targetDeg) {
-      const canvas = document.getElementById(`wheel${wheelNum}`);
-      const btn = document.getElementById(`btn${wheelNum}`);
-      const list = (wheelNum === 1) ? originalNames : currentNamesWheel2;
+    function runSpinAnimation(targetIndex, mode) {
+      isSpinning = true;
+      document.getElementById('spin-btn').disabled = true;
+      document.getElementById('result').innerText = `正在抽取【${mode}】中...`;
 
-      btn.disabled = true;
-      canvas.style.transform = `rotate(${targetDeg}deg)`;
+      const numSegments = members.length;
+      const arcSize = (2 * Math.PI) / numSegments;
+      
+      // 計算停止角度 (頂部指標對應角度為 3*PI/2)
+      const targetAngleSegment = (3 * Math.PI / 2) - (targetIndex * arcSize) - (arcSize / 2);
+      const extraRounds = 5 * 2 * Math.PI; // 旋轉 5 圈
+      const finalAngle = currentAngle + extraRounds + (targetAngleSegment - (currentAngle % (2 * Math.PI)));
 
-      setTimeout(() => {
-        const actualDeg = (360 - (targetDeg % 360) + 270) % 360;
-        const index = Math.floor((actualDeg / 360) * list.length);
-        const winner = list[index];
+      let start = null;
+      const duration = 4000; // 4秒
 
-        if (wheelNum === 1) {
-          leaderWinner = winner;
-          document.getElementById('result1').innerText = `👑 總召：${winner}`;
-          
-          currentNamesWheel2 = originalNames.filter(name => name !== winner);
-          drawWheel('wheel2', currentNamesWheel2);
-          document.getElementById('btn2').disabled = false;
-          document.getElementById('result2').innerText = "請點擊抽會計！";
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        
+        // 緩動函數 ease-out
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const angleNow = currentAngle + (finalAngle - currentAngle) * easeOut;
+
+        drawWheel(angleNow);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
         } else {
-          document.getElementById('result2').innerText = `💰 會計：${winner}`;
-        }
-      }, 4000);
-    }
+          currentAngle = finalAngle;
+          isSpinning = false;
+          const winner = members[targetIndex];
 
-    // 初始化畫盤
-    drawWheel('wheel1', originalNames);
-    drawWheel('wheel2', originalNames);
+          if (mode === "總召") {
+            leaderName = winner;
+            document.getElementById('result').innerText = `🎉 總召：【${winner}】！`;
+            targetMode = "會計";
+            if (isHost) {
+              document.getElementById('spin-btn').innerText = "繼續抽會計！";
+              document.getElementById('spin-btn').disabled = false;
+            }
+          } else {
+            document.getElementById('result').innerHTML = `🎉 總召：【${leaderName}】<br>💰 會計：【${winner}】！`;
+            if (isHost) {
+              document.getElementById('spin-btn').innerText = "重新抽卡";
+              targetMode = "總召";
+              document.getElementById('spin-btn').disabled = false;
+            }
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
   </script>
 </body>
 </html>
-
-```
