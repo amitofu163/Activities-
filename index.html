@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>歡樂轉盤抽籤！</title>
+  <title>旅遊大冒險：選總召與會計！</title>
 
   <!-- Google Fonts 胖胖字體 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,16 +33,15 @@
       min-height: 100vh;
     }
 
-    /* 活動標題 */
+    /* 旅遊主題標題 */
     h1 {
       font-size: 1.8rem;
       color: #222222;
       text-align: center;
       margin: 10px 0 15px 0;
       -webkit-text-stroke: 1.5px #FFFFFF;
-      text-shadow: 2px 2px 0px #FFB3BA, 4px 4px 0px rgba(0,0,0,0.15);
+      text-shadow: 2px 2px 0px #BAE1FF, 4px 4px 0px rgba(0,0,0,0.15);
       letter-spacing: 1px;
-      word-break: break-all;
     }
 
     .card {
@@ -61,11 +60,11 @@
       font-size: 1.3rem;
       color: #222222;
       margin-bottom: 12px;
-      background: #FFF3F4;
+      background: #E8F4FF;
       padding: 6px 16px;
       border-radius: 30px;
       display: inline-block;
-      border: 2px solid #FFB3BA;
+      border: 2px solid #BAE1FF;
     }
 
     .btn {
@@ -96,12 +95,13 @@
       transform: none;
     }
 
-    input[type="text"] {
+    /* 選擇自己是誰的下拉選單 */
+    select {
       width: 80%;
       padding: 10px;
       border: 3px solid #222222;
       border-radius: 16px;
-      font-size: 1rem;
+      font-size: 1.1rem;
       text-align: center;
       outline: none;
       background-color: #FFF;
@@ -114,10 +114,10 @@
       display: inline-block;
       background: #BAFFC9;
       border: 2px solid #222;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.9rem;
-      margin: 3px;
+      font-size: 0.95rem;
+      margin: 4px;
       box-shadow: 2px 2px 0px #222;
     }
 
@@ -159,7 +159,7 @@
       background: #FAFAFA;
       padding: 8px;
       border-radius: 12px;
-      border: 2px dashed #FFB3BA;
+      border: 2px dashed #BAE1FF;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -206,7 +206,7 @@
       width: 85%;
       max-width: 340px;
       text-align: center;
-      box-shadow: 0 10px 0px #FFB3BA;
+      box-shadow: 0 10px 0px #BAE1FF;
       transform: scale(0.5);
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -241,48 +241,47 @@
 </head>
 <body>
 
-  <!-- 活動大標題 -->
-  <h1 id="event-title-display">⛺️ 露營大會：選總召與會計！</h1>
+  <!-- 旅遊主題大標題 -->
+  <h1>✈️ 旅遊大冒險：選總召與會計！ 🧳</h1>
 
-  <!-- 房間與連線區塊 -->
+  <!-- 連線夥伴區塊 -->
   <div class="card">
-    <div id="status" style="font-size:0.95rem; color:#555; margin-bottom:8px;">未連線</div>
-    
-    <div id="room-controls">
-      <!-- 建立房間選項 -->
-      <div style="border-bottom: 2px dashed #DDD; padding-bottom: 12px; margin-bottom: 12px;">
-        <input type="text" id="event-title-input" value="露營大會：選總召與會計！" placeholder="輸入活動名稱">
-        <button class="btn" onclick="createRoom()">建立新活動 (房主)</button>
-      </div>
-
-      <!-- 加入房間選項 -->
-      <div>
-        <input type="text" id="room-id-input" placeholder="輸入房間 ID">
-        <button class="btn" style="background-color: #BAE1FF;" onclick="joinRoom()">加入活動</button>
-      </div>
+    <div id="select-identity-box">
+      <div style="font-size: 1.1rem; margin-bottom: 8px;">👋 請選擇你是哪位夥伴：</div>
+      <select id="user-select">
+        <option value="">-- 請選擇你的名字 --</option>
+        <option value="鈴鈴">鈴鈴</option>
+        <option value="文駿">文駿</option>
+        <option value="崔">崔</option>
+        <option value="璟勝">璟勝</option>
+        <option value="阿博">阿博</option>
+        <option value="豆腐">豆腐</option>
+      </select>
+      <br>
+      <button class="btn" style="background-color: #BAE1FF;" onclick="confirmIdentity()">加入同步連線</button>
     </div>
 
     <!-- 已連線成員清單 -->
-    <div id="online-users-box" style="display:none; margin-top: 10px;">
-      <div style="font-size: 0.95rem; margin-bottom: 5px;">🟢 目前線上成員：</div>
+    <div id="online-users-box" style="display:none; margin-top: 5px;">
+      <div style="font-size: 1.05rem; margin-bottom: 8px;">🟢 已連線的旅遊夥伴：</div>
       <div id="user-tags-container"></div>
     </div>
   </div>
 
   <!-- 轉盤 1：選總召 -->
   <div class="card" id="card-leader">
-    <div class="section-title">👑 第一關：抽出「總召」</div>
+    <div class="section-title">👑 第一站：抽出「總召」</div>
     <div class="wheel-container">
       <div class="pointer"></div>
       <canvas id="wheel-leader" width="280" height="280"></canvas>
     </div>
-    <button id="spin-btn-leader" class="btn" style="font-size: 1.2rem; width: 85%; margin-top: 12px;" onclick="prepareSpin('LEADER')" disabled>開始抽總召！</button>
+    <button id="spin-btn-leader" class="btn" style="font-size: 1.2rem; width: 85%; margin-top: 12px;" onclick="prepareSpin('LEADER')">開始抽總召！</button>
     <div id="result-leader" class="result-box">等待抽總召...</div>
   </div>
 
   <!-- 轉盤 2：選會計 -->
   <div class="card disabled-card" id="card-accountant">
-    <div class="section-title">💰 第二關：抽出「會計」</div>
+    <div class="section-title">💰 第二站：抽出「會計」</div>
     <div class="wheel-container">
       <div class="pointer"></div>
       <canvas id="wheel-accountant" width="280" height="280"></canvas>
@@ -312,6 +311,11 @@
     let leaderWinner = "";
     let accountantWinner = "";
 
+    let myName = "";
+    let onlineUsers = new Set();
+
+    // 固定 PeerJS 房間 ID
+    const FIXED_ROOM_ID = "camp-group-tour-2024-secret-key";
     let peer = null;
     let connections = [];
     let hostConn = null;
@@ -326,7 +330,7 @@
     const ctxAccountant = canvasAccountant.getContext('2d');
     let angleAccountant = 0;
 
-    // 繪製轉盤 (黑字 + 粗白框)
+    // 繪製轉盤 (黑字 + 厚白框)
     function drawWheel(ctx, list, angle) {
       const size = 280;
       const center = size / 2;
@@ -383,75 +387,74 @@
     drawWheel(ctxLeader, leaderMembers, angleLeader);
     drawWheel(ctxAccountant, ["？", "？", "？", "？", "？"], angleAccountant);
 
-    // PeerJS 網路連線
-    peer = new Peer();
+    // 確認身份並自動進行 PeerJS 連線
+    function confirmIdentity() {
+      const sel = document.getElementById('user-select');
+      myName = sel.value;
+      if (!myName) return alert("請先選擇你的名字喔！");
 
-    peer.on('open', (id) => {
-      document.getElementById('status').innerText = `已登入！ ID: ${id}`;
-    });
-
-    // 房主建立房間
-    function createRoom() {
-      const title = document.getElementById('event-title-input').value.trim() || "露營大會：選總召與會計！";
-      document.getElementById('event-title-display').innerText = "⛺️ " + title;
-      
-      isHost = true;
-      document.getElementById('status').innerText = `你是房主 | 房間 ID: ${peer.id}`;
-      document.getElementById('spin-btn-leader').disabled = false;
-      document.getElementById('room-controls').style.display = 'none';
+      document.getElementById('select-identity-box').style.display = 'none';
       document.getElementById('online-users-box').style.display = 'block';
 
-      updateOnlineUsers(["房主 (你)"]);
+      // 嘗試成為第一個進入的主控端 (Host)
+      peer = new Peer(FIXED_ROOM_ID);
 
-      peer.on('connection', (conn) => {
-        connections.push(conn);
-        // 傳送當前活動名稱給剛進來的成員
-        conn.on('open', () => {
-          conn.send({ type: 'SYNC_TITLE', title: title });
-          updateOnlineUsers(["房主", ...connections.map((c, i) => `成員 ${i+1}`)]);
+      peer.on('open', () => {
+        isHost = true;
+        onlineUsers.add(myName);
+        renderOnlineUsers();
+
+        peer.on('connection', (conn) => {
+          connections.push(conn);
+          conn.on('data', (data) => handleData(data, conn));
         });
-        conn.on('data', (data) => handleData(data));
-      });
-    }
-
-    // 成員加入房間
-    function joinRoom() {
-      const roomId = document.getElementById('room-id-input').value.trim();
-      if (!roomId) return alert("請輸入房間 ID");
-
-      isHost = false;
-      hostConn = peer.connect(roomId);
-
-      hostConn.on('open', () => {
-        document.getElementById('status').innerText = `已成功加入房間！`;
-        document.getElementById('room-controls').style.display = 'none';
-        document.getElementById('online-users-box').style.display = 'block';
       });
 
-      hostConn.on('data', (data) => handleData(data));
+      // 如果固定 ID 已存在，代表有人先進去了，改當連線端 (Client)
+      peer.on('error', (err) => {
+        if (err.type === 'unavailable-id') {
+          isHost = false;
+          peer = new Peer(); // 隨機 ID
+          peer.on('open', () => {
+            hostConn = peer.connect(FIXED_ROOM_ID);
+            hostConn.on('open', () => {
+              // 傳送自己的名字給 Host
+              hostConn.send({ type: 'JOIN_USER', name: myName });
+            });
+            hostConn.on('data', (data) => handleData(data));
+          });
+        }
+      });
     }
 
     function broadcast(data) {
-      connections.forEach(conn => conn.send(data));
+      if (isHost) {
+        connections.forEach(conn => conn.send(data));
+      } else if (hostConn) {
+        hostConn.send(data);
+      }
     }
 
-    function updateOnlineUsers(list) {
+    function renderOnlineUsers() {
       const container = document.getElementById('user-tags-container');
       container.innerHTML = "";
-      list.forEach(name => {
+      onlineUsers.forEach(name => {
         const span = document.createElement('span');
         span.className = 'user-tag';
-        span.innerText = name;
+        span.innerText = `🟢 ${name}`;
         container.appendChild(span);
       });
     }
 
-    // 準備抽籤（發起倒數 3 2 1）
+    // 發起抽籤倒數
     function prepareSpin(role) {
-      if (!isHost) return;
       const data = { type: 'START_COUNTDOWN', role: role };
-      broadcast(data);
-      runCountdown(role);
+      if (isHost) {
+        broadcast(data);
+        runCountdown(role);
+      } else {
+        broadcast(data); // 傳給 Host 讓所有人同步
+      }
     }
 
     // 倒數 3 2 1 動畫
@@ -478,7 +481,6 @@
           overlay.classList.remove('active');
           box.style.display = 'none';
 
-          // 倒數結束，開始轉動轉盤
           if (isHost) {
             if (role === 'LEADER') {
               const targetIndex = Math.floor(Math.random() * leaderMembers.length);
@@ -494,12 +496,23 @@
       }, 900);
     }
 
-    // 處理收到連線資訊
-    function handleData(data) {
-      if (data.type === 'SYNC_TITLE') {
-        document.getElementById('event-title-display').innerText = "⛺️ " + data.title;
+    // 處理連線訊息
+    function handleData(data, conn) {
+      if (data.type === 'JOIN_USER') {
+        onlineUsers.add(data.name);
+        renderOnlineUsers();
+        // 廣播最新夥伴名單給所有人
+        broadcast({ type: 'UPDATE_USERS', users: Array.from(onlineUsers) });
+      } else if (data.type === 'UPDATE_USERS') {
+        onlineUsers = new Set(data.users);
+        renderOnlineUsers();
       } else if (data.type === 'START_COUNTDOWN') {
-        runCountdown(data.role);
+        if (isHost) {
+          broadcast(data);
+          runCountdown(data.role);
+        } else {
+          runCountdown(data.role);
+        }
       } else if (data.type === 'SPIN_LEADER') {
         runLeaderAnimation(data.targetIndex);
       } else if (data.type === 'SPIN_ACCOUNTANT') {
@@ -536,7 +549,7 @@
           leaderWinner = leaderMembers[targetIndex];
           document.getElementById('result-leader').innerText = `🎉 總召：【${leaderWinner}】！`;
 
-          // 彈出全螢幕恭喜 Modal
+          // 全螢幕彈窗
           showWinnerModal("👑 恭喜成為【總召】！", leaderWinner);
 
           // 準備第二個轉盤（排除總召）
@@ -545,10 +558,7 @@
 
           document.getElementById('card-accountant').classList.remove('disabled-card');
           document.getElementById('result-accountant').innerText = "等待抽會計...";
-
-          if (isHost) {
-            document.getElementById('spin-btn-accountant').disabled = false;
-          }
+          document.getElementById('spin-btn-accountant').disabled = false;
         }
       }
 
@@ -584,13 +594,11 @@
           accountantWinner = accountantMembers[targetIndex];
           document.getElementById('result-accountant').innerText = `💰 會計：【${accountantWinner}】！`;
 
-          // 彈出全螢幕恭喜 Modal
+          // 全螢幕彈窗
           showWinnerModal("💰 恭喜成為【會計】！", accountantWinner);
 
-          if (isHost) {
-            document.getElementById('spin-btn-leader').innerText = "重新抽總召";
-            document.getElementById('spin-btn-leader').disabled = false;
-          }
+          document.getElementById('spin-btn-leader').innerText = "重新抽總召";
+          document.getElementById('spin-btn-leader').disabled = false;
         }
       }
 
