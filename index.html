@@ -20,13 +20,14 @@
       font-family: 'Zen Maru Gothic', 'Mochiy Pop One', cursive, sans-serif;
       font-weight: 900;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
-      padding: 15px;
+      padding: 15px 10px 40px 10px;
       background-color: #FAF8F5;
-      color: #333333;
+      color: #222222;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -35,104 +36,137 @@
 
     h1 {
       font-size: 1.8rem;
-      color: #4A4A4A;
-      text-shadow: 2px 2px 0px #FFF, 3px 3px 0px rgba(0,0,0,0.08);
-      margin: 10px 0 15px 0;
+      color: #222222;
       text-align: center;
+      margin: 10px 0 15px 0;
+      -webkit-text-stroke: 1.5px #FFFFFF;
+      text-shadow: 2px 2px 0px #FFB3BA, 4px 4px 0px rgba(0,0,0,0.15);
+      letter-spacing: 1px;
     }
 
     .card {
       background: white;
-      padding: 15px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      padding: 18px 15px;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
       width: 100%;
-      max-width: 400px;
-      margin-bottom: 15px;
+      max-width: 380px;
+      margin-bottom: 20px;
       text-align: center;
+      border: 3px solid #FFF;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      color: #222222;
+      margin-bottom: 12px;
+      background: #FFF3F4;
+      padding: 6px 16px;
+      border-radius: 30px;
+      display: inline-block;
+      border: 2px solid #FFB3BA;
     }
 
     .btn {
       background-color: #FFB3BA;
-      color: #333;
-      border: none;
+      color: #222222;
+      border: 2px solid #222222;
       padding: 12px 24px;
       font-size: 1.1rem;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 0px #E598A0;
+      box-shadow: 0 5px 0px #222222;
       transition: all 0.1s ease;
-      margin: 5px;
+      margin: 8px 4px;
+      display: inline-block;
     }
 
     .btn:active {
       transform: translateY(4px);
-      box-shadow: 0 0px 0px #E598A0;
+      box-shadow: 0 1px 0px #222222;
     }
 
     .btn:disabled {
       background-color: #E0E0E0;
-      color: #A0A0A0;
-      box-shadow: none;
+      color: #888888;
+      border-color: #AAAAAA;
+      box-shadow: 0 4px 0px #AAAAAA;
       cursor: not-allowed;
+      transform: none;
     }
 
     input[type="text"] {
       width: 70%;
       padding: 10px;
-      border: 3px solid #FFB3BA;
-      border-radius: 12px;
+      border: 3px solid #222222;
+      border-radius: 16px;
       font-size: 1rem;
       text-align: center;
       outline: none;
+      background-color: #FFF;
+      color: #222222;
     }
 
-    /* 轉盤容器 */
+    /* 轉盤容器 (直式排列) */
     .wheel-container {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       margin: 10px auto;
     }
 
     /* 轉盤指標 */
     .pointer {
       position: absolute;
-      top: -15px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 30px solid #FF6B6B;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 28px solid #FF4757;
       z-index: 10;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.3));
     }
 
     canvas {
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       border-radius: 50%;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      border: 4px solid #222222;
     }
 
     /* 結果顯示欄 */
     .result-box {
       font-size: 1.3rem;
-      color: #555555;
+      color: #FF4757;
       min-height: 40px;
       margin-top: 10px;
+      background: #FAFAFA;
+      padding: 8px;
+      border-radius: 12px;
+      border: 2px dashed #FFB3BA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .status-tag {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       background: #F0F0F0;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       display: inline-block;
       margin-bottom: 10px;
-      color: #6C757D;
+      color: #444444;
+      border: 1px solid #DDD;
+    }
+
+    .disabled-card {
+      opacity: 0.5;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -142,94 +176,133 @@
 
   <!-- 房間設定區塊 -->
   <div class="card">
-    <div id="status" class="status-tag">狀態：初始化中...</div>
+    <div id="status" class="status-tag">連線狀態：初始化中...</div>
     <div id="room-controls">
       <button class="btn" onclick="createRoom()">建立房間 (成為房主)</button>
-      <div style="margin-top: 10px;">
+      <div style="margin-top: 12px;">
         <input type="text" id="room-id-input" placeholder="輸入房間 ID">
-        <button class="btn" style="background-color: #BAE1FF; box-shadow: 0 4px 0px #97C4E6;" onclick="joinRoom()">加入</button>
+        <button class="btn" style="background-color: #BAE1FF;" onclick="joinRoom()">加入</button>
       </div>
     </div>
   </div>
 
-  <!-- 轉盤區塊 -->
-  <div class="card">
+  <!-- 轉盤 1：選總召 (包含 6 人) -->
+  <div class="card" id="card-leader">
+    <div class="section-title">👑 第一關：抽出「總召」</div>
     <div class="wheel-container">
       <div class="pointer"></div>
-      <canvas id="wheel" width="320" height="320"></canvas>
+      <canvas id="wheel-leader" width="280" height="280"></canvas>
     </div>
-    
-    <button id="spin-btn" class="btn" style="font-size: 1.3rem; width: 80%; margin-top: 15px;" onclick="startSpin()" disabled>開始抽卡！</button>
-    <div id="result" class="result-box">等待開始...</div>
+    <button id="spin-btn-leader" class="btn" style="font-size: 1.2rem; width: 85%; margin-top: 12px;" onclick="startSpin('LEADER')" disabled>開始抽總召！</button>
+    <div id="result-leader" class="result-box">等待抽總召...</div>
+  </div>
+
+  <!-- 轉盤 2：選會計 (排除總召後剩 5 人) -->
+  <div class="card disabled-card" id="card-accountant">
+    <div class="section-title">💰 第二關：抽出「會計」</div>
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <canvas id="wheel-accountant" width="280" height="280"></canvas>
+    </div>
+    <button id="spin-btn-accountant" class="btn" style="background-color: #BAE1FF; font-size: 1.2rem; width: 85%; margin-top: 12px;" onclick="startSpin('ACCOUNTANT')" disabled>開始抽會計！</button>
+    <div id="result-accountant" class="result-box">請先選出總召！</div>
   </div>
 
   <script>
-    const members = ["鈴鈴", "文駿", "崔", "璟勝", "阿博", "豆腐"];
+    const initialMembers = ["鈴鈴", "文駿", "崔", "璟勝", "阿博", "豆腐"];
     
-    // 淺色系（馬卡龍/莫蘭迪淺色）：紅、橙、黃、綠、藍、紫
-    const colors = [
-      "#FFB3BA", // 淺紅 (馬卡龍粉)
-      "#FFDFBA", // 淺橙 (馬卡龍橘)
-      "#FFFFBA", // 淺黃 (奶油黃)
-      "#BAFFC9", // 淺綠 (薄荷綠)
-      "#BAE1FF", // 淺藍 (天空藍)
-      "#E8AEFF"  // 淺紫 (薰衣草紫)
+    // 淺色系（馬卡龍淺色）：粉紅、粉橘、奶油黃、薄荷綠、天空藍、薰衣草紫
+    const pastelColors = [
+      "#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF", "#E8AEFF"
     ];
+
+    let leaderMembers = [...initialMembers];
+    let accountantMembers = [];
     
+    let leaderWinner = "";
+    let accountantWinner = "";
+
+    let isSpinningLeader = false;
+    let isSpinningAccountant = false;
+
     let peer = null;
     let connections = [];
     let hostConn = null;
     let isHost = false;
 
-    // 轉盤繪製與動畫變數
-    const canvas = document.getElementById('wheel');
-    const ctx = canvas.getContext('2d');
-    let currentAngle = 0;
-    let isSpinning = false;
-    let targetMode = "總召"; // 先抽總召，再抽會計
-    let leaderName = "";
+    // Canvas 相關變數
+    const canvasLeader = document.getElementById('wheel-leader');
+    const ctxLeader = canvasLeader.getContext('2d');
+    let angleLeader = 0;
 
-    function drawWheel(angle) {
-      const numSegments = members.length;
+    const canvasAccountant = document.getElementById('wheel-accountant');
+    const ctxAccountant = canvasAccountant.getContext('2d');
+    let angleAccountant = 0;
+
+    // 通用畫轉盤函式（黑字清晰粗白框 + 胖胖字體）
+    function drawWheel(ctx, list, angle) {
+      const size = 280;
+      const center = size / 2;
+      const radius = center - 8;
+      const numSegments = list.length;
+
+      ctx.clearRect(0, 0, size, size);
+
+      if (numSegments === 0) {
+        ctx.fillStyle = "#E0E0E0";
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        return;
+      }
+
       const arcSize = (2 * Math.PI) / numSegments;
-      ctx.clearRect(0, 0, 320, 320);
 
       for (let i = 0; i < numSegments; i++) {
         const startArc = angle + i * arcSize;
         const endArc = startArc + arcSize;
 
-        // 畫扇形
+        // 畫扇形區域
         ctx.beginPath();
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.moveTo(160, 160);
-        ctx.arc(160, 160, 150, startArc, endArc);
+        ctx.fillStyle = pastelColors[i % pastelColors.length];
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, startArc, endArc);
         ctx.fill();
 
-        // 畫文字（黑字＋白框）
+        // 繪製分隔線
+        ctx.strokeStyle = "#FFFFFF";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // 畫文字 (黑字 + 厚白外框)
         ctx.save();
-        ctx.translate(160 + Math.cos(startArc + arcSize / 2) * 100, 160 + Math.sin(startArc + arcSize / 2) * 100);
+        ctx.translate(center + Math.cos(startArc + arcSize / 2) * (radius * 0.65), 
+                      center + Math.sin(startArc + arcSize / 2) * (radius * 0.65));
         ctx.rotate(startArc + arcSize / 2 + Math.PI / 2);
-        ctx.font = "900 22px 'Zen Maru Gothic', cursive, sans-serif";
+        
+        ctx.font = "900 22px 'Zen Maru Gothic', 'Mochiy Pop One', cursive, sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        // 白框 (Stroke)
+        // 極粗白框 (Stroke)
         ctx.strokeStyle = "#FFFFFF";
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 7;
         ctx.lineJoin = "round";
-        ctx.strokeText(members[i], 0, 0);
+        ctx.strokeText(list[i], 0, 0);
 
-        // 黑字 (Fill)
-        ctx.fillStyle = "#222222";
-        ctx.fillText(members[i], 0, 0);
+        // 正黑字 (Fill)
+        ctx.fillStyle = "#111111";
+        ctx.fillText(list[i], 0, 0);
 
         ctx.restore();
       }
     }
 
-    drawWheel(currentAngle);
+    // 初始化畫兩個轉盤
+    drawWheel(ctxLeader, leaderMembers, angleLeader);
+    drawWheel(ctxAccountant, ["？", "？", "？", "？", "？"], angleAccountant);
 
-    // PeerJS 邏輯
+    // PeerJS 實時連線
     peer = new Peer();
 
     peer.on('open', (id) => {
@@ -239,7 +312,7 @@
     function createRoom() {
       isHost = true;
       document.getElementById('status').innerText = `你是房主 | 房間 ID: ${peer.id}`;
-      document.getElementById('spin-btn').disabled = false;
+      document.getElementById('spin-btn-leader').disabled = false;
       document.getElementById('room-controls').style.display = 'none';
 
       peer.on('connection', (conn) => {
@@ -267,72 +340,119 @@
       connections.forEach(conn => conn.send(data));
     }
 
-    function startSpin() {
-      if (isSpinning) return;
-      
-      const targetIndex = Math.floor(Math.random() * members.length);
-      const data = { type: 'SPIN', targetIndex: targetIndex, mode: targetMode };
-      
-      if (isHost) {
-        broadcast(data);
-        runSpinAnimation(targetIndex, targetMode);
+    function startSpin(role) {
+      if (role === 'LEADER' && isSpinningLeader) return;
+      if (role === 'ACCOUNTANT' && isSpinningAccountant) return;
+
+      if (role === 'LEADER') {
+        const targetIndex = Math.floor(Math.random() * leaderMembers.length);
+        const data = { type: 'SPIN_LEADER', targetIndex };
+        if (isHost) {
+          broadcast(data);
+          runLeaderAnimation(targetIndex);
+        }
+      } else if (role === 'ACCOUNTANT') {
+        const targetIndex = Math.floor(Math.random() * accountantMembers.length);
+        const data = { type: 'SPIN_ACCOUNTANT', targetIndex };
+        if (isHost) {
+          broadcast(data);
+          runAccountantAnimation(targetIndex);
+        }
       }
     }
 
     function handleData(data) {
-      if (data.type === 'SPIN') {
-        runSpinAnimation(data.targetIndex, data.mode);
+      if (data.type === 'SPIN_LEADER') {
+        runLeaderAnimation(data.targetIndex);
+      } else if (data.type === 'SPIN_ACCOUNTANT') {
+        runAccountantAnimation(data.targetIndex);
       }
     }
 
-    function runSpinAnimation(targetIndex, mode) {
-      isSpinning = true;
-      document.getElementById('spin-btn').disabled = true;
-      document.getElementById('result').innerText = `正在抽取【${mode}】中...`;
+    // 總召轉盤動畫
+    function runLeaderAnimation(targetIndex) {
+      isSpinningLeader = true;
+      document.getElementById('spin-btn-leader').disabled = true;
+      document.getElementById('result-leader').innerText = "🌀 正在抽取總召...";
 
-      const numSegments = members.length;
+      const numSegments = leaderMembers.length;
       const arcSize = (2 * Math.PI) / numSegments;
-      
-      // 計算停止角度 (頂部指標對應角度為 3*PI/2)
       const targetAngleSegment = (3 * Math.PI / 2) - (targetIndex * arcSize) - (arcSize / 2);
-      const extraRounds = 5 * 2 * Math.PI; // 旋轉 5 圈
-      const finalAngle = currentAngle + extraRounds + (targetAngleSegment - (currentAngle % (2 * Math.PI)));
+      const extraRounds = 5 * 2 * Math.PI;
+      const finalAngle = angleLeader + extraRounds + (targetAngleSegment - (angleLeader % (2 * Math.PI)));
 
       let start = null;
-      const duration = 4000; // 4秒
+      const duration = 4000;
 
       function animate(timestamp) {
         if (!start) start = timestamp;
         const progress = Math.min((timestamp - start) / duration, 1);
-        
-        // 緩動函數 ease-out
         const easeOut = 1 - Math.pow(1 - progress, 3);
-        const angleNow = currentAngle + (finalAngle - currentAngle) * easeOut;
+        const currentAngle = angleLeader + (finalAngle - angleLeader) * easeOut;
 
-        drawWheel(angleNow);
+        drawWheel(ctxLeader, leaderMembers, currentAngle);
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          currentAngle = finalAngle;
-          isSpinning = false;
-          const winner = members[targetIndex];
+          angleLeader = finalAngle;
+          isSpinningLeader = false;
+          leaderWinner = leaderMembers[targetIndex];
 
-          if (mode === "總召") {
-            leaderName = winner;
-            document.getElementById('result').innerText = `🎉 總召：【${winner}】！`;
-            targetMode = "會計";
-            if (isHost) {
-              document.getElementById('spin-btn').innerText = "繼續抽會計！";
-              document.getElementById('spin-btn').disabled = false;
-            }
-          } else {
-            document.getElementById('result').innerHTML = `🎉 總召：【${leaderName}】<br>💰 會計：【${winner}】！`;
-            if (isHost) {
-              document.getElementById('spin-btn').innerText = "重新抽卡";
-              targetMode = "總召";
-              document.getElementById('spin-btn').disabled = false;
-            }
+          document.getElementById('result-leader').innerText = `🎉 總召：【${leaderWinner}】！`;
+
+          // 準備第二個轉盤（排除總召）
+          accountantMembers = initialMembers.filter(m => m !== leaderWinner);
+          drawWheel(ctxAccountant, accountantMembers, angleAccountant);
+
+          // 解鎖第二個卡片
+          document.getElementById('card-accountant').classList.remove('disabled-card');
+          document.getElementById('result-accountant').innerText = "等待抽會計...";
+
+          if (isHost) {
+            document.getElementById('spin-btn-accountant').disabled = false;
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // 會計轉盤動畫
+    function runAccountantAnimation(targetIndex) {
+      isSpinningAccountant = true;
+      document.getElementById('spin-btn-accountant').disabled = true;
+      document.getElementById('result-accountant').innerText = "🌀 正在抽取會計...";
+
+      const numSegments = accountantMembers.length;
+      const arcSize = (2 * Math.PI) / numSegments;
+      const targetAngleSegment = (3 * Math.PI / 2) - (targetIndex * arcSize) - (arcSize / 2);
+      const extraRounds = 5 * 2 * Math.PI;
+      const finalAngle = angleAccountant + extraRounds + (targetAngleSegment - (angleAccountant % (2 * Math.PI)));
+
+      let start = null;
+      const duration = 4000;
+
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentAngle = angleAccountant + (finalAngle - angleAccountant) * easeOut;
+
+        drawWheel(ctxAccountant, accountantMembers, currentAngle);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          angleAccountant = finalAngle;
+          isSpinningAccountant = false;
+          accountantWinner = accountantMembers[targetIndex];
+
+          document.getElementById('result-accountant').innerText = `💰 會計：【${accountantWinner}】！`;
+
+          if (isHost) {
+            document.getElementById('spin-btn-leader').innerText = "重新抽總召";
+            document.getElementById('spin-btn-leader').disabled = false;
           }
         }
       }
